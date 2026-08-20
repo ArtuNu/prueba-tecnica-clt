@@ -11,9 +11,24 @@ public sealed class GetUsersQueryHandler(AppDbContext dbContext)
     {
         var usersQuery = dbContext.Users.AsNoTracking();
 
-        if (query.IsActive.HasValue)
+        if (!string.IsNullOrWhiteSpace(query.Name))
         {
-            usersQuery = usersQuery.Where(user => user.IsActive == query.IsActive.Value);
+            var name = query.Name.Trim().ToLower();
+            usersQuery = usersQuery.Where(user => user.Name.ToLower().Contains(name));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Email))
+        {
+            var email = query.Email.Trim().ToLower();
+            usersQuery = usersQuery.Where(user => user.Email.ToLower().Contains(email));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.IsActive))
+        {
+            if (bool.TryParse(query.IsActive, out var isActive))
+            {
+                usersQuery = usersQuery.Where(user => user.IsActive == isActive);
+            }
         }
 
         return await usersQuery

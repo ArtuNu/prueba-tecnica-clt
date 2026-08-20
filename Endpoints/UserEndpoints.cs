@@ -41,11 +41,55 @@ public static class UserEndpoints
     }
 
     private static async Task<IResult> GetUsersAsync(
-        bool? isActive,
+        string? name,
+        string? email,
+        string? isActive,
+        HttpRequest request,
         GetUsersQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var users = await handler.HandleAsync(new GetUsersQuery(isActive), cancellationToken);
+        // Se valida que los parámetros no se envien vacios
+
+        if (request.Query.ContainsKey("name") &&
+            string.IsNullOrWhiteSpace(request.Query["name"]))
+        {
+            return Results.BadRequest(new
+            {
+                error = "El parámetro 'name' no puede estar vacío."
+            });
+        }
+
+        if (request.Query.ContainsKey("email") &&
+            string.IsNullOrWhiteSpace(request.Query["email"]))
+        {
+            return Results.BadRequest(new
+            {
+                error = "El parámetro 'email' no puede estar vacío."
+            });
+        }
+
+        if (request.Query.ContainsKey("isActive") &&
+            string.IsNullOrWhiteSpace(request.Query["isActive"]))
+        {
+            return Results.BadRequest(new
+            {
+                error = "El parámetro 'isActive' no puede estar vacío."
+            });
+        }
+
+        // Se valida que el valor del parametro sea solo o true o false
+        if (!string.IsNullOrWhiteSpace(isActive) &&
+            !bool.TryParse(isActive, out _))
+        {
+            return Results.BadRequest(new
+            {
+                error = "El parámetro 'isActive' debe ser 'true' o 'false'."
+            });
+        }
+
+        var users = await handler.HandleAsync(
+            new GetUsersQuery(name, email, isActive),
+            cancellationToken);
         return Results.Ok(users);
     }
 

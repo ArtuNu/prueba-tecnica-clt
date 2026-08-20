@@ -80,4 +80,9 @@ app.MapUserEndpoints();
 app.MapAddressEndpoints();
 app.MapCurrencyEndpoints();
 
+app.MapFallback(() => Results.Problem(
+    statusCode: StatusCodes.Status404NotFound,
+    title: "Endpoint no encontrado",
+    detail: "La URL solicitada no existe. Verifique la ruta y el metodo HTTP."));
+
 app.Run();

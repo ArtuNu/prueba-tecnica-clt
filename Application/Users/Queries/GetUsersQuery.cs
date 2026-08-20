@@ -1,3 +1,6 @@
 namespace PruebaTecnicaClt.Application.Users.Queries;
 
-public sealed record GetUsersQuery(bool? IsActive);
+public sealed record GetUsersQuery(
+    string? Name,
+    string? Email,
+    string? IsActive);
