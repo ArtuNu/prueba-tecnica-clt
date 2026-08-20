@@ -12,6 +12,7 @@ public static class AddressEndpoints
         endpoints.MapPost("/users/{userId:int}/addresses", CreateAddressAsync).WithTags("Addresses");
         endpoints.MapGet("/users/{userId:int}/addresses", GetUserAddressesAsync).WithTags("Addresses");
         endpoints.MapPut("/addresses/{id:int}", UpdateAddressAsync).WithTags("Addresses");
+        endpoints.MapPatch("/addresses/{id:int}", PatchAddressAsync).WithTags("Addresses");
         endpoints.MapDelete("/addresses/{id:int}", DeleteAddressAsync).WithTags("Addresses");
 
         return endpoints;
@@ -55,6 +56,25 @@ public static class AddressEndpoints
         UpdateAddressCommand command,
         IValidator<UpdateAddressCommand> validator,
         UpdateAddressCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var validation = await validator.ValidateAsync(command, cancellationToken);
+        if (!validation.IsValid)
+        {
+            return Results.ValidationProblem(validation.ToErrorDictionary());
+        }
+
+        var result = await handler.HandleAsync(id, command, cancellationToken);
+        return result.Status == CommandStatus.NotFound
+            ? Results.NotFound(new { error = result.Error })
+            : Results.Ok(result.Value);
+    }
+
+    private static async Task<IResult> PatchAddressAsync(
+        int id,
+        PatchAddressCommand command,
+        IValidator<PatchAddressCommand> validator,
+        PatchAddressCommandHandler handler,
         CancellationToken cancellationToken)
     {
         var validation = await validator.ValidateAsync(command, cancellationToken);

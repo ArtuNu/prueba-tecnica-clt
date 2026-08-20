@@ -16,6 +16,7 @@ public static class UserEndpoints
         group.MapGet("/", GetUsersAsync);
         group.MapGet("/{id:int}", GetUserByIdAsync);
         group.MapPut("/{id:int}", UpdateUserAsync);
+        group.MapPatch("/{id:int}", PatchUserAsync);
         group.MapDelete("/{id:int}", DeleteUserAsync);
 
         return endpoints;
@@ -62,6 +63,28 @@ public static class UserEndpoints
         UpdateUserCommand command,
         IValidator<UpdateUserCommand> validator,
         UpdateUserCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var validation = await validator.ValidateAsync(command, cancellationToken);
+        if (!validation.IsValid)
+        {
+            return Results.ValidationProblem(validation.ToErrorDictionary());
+        }
+
+        var result = await handler.HandleAsync(id, command, cancellationToken);
+        return result.Status switch
+        {
+            CommandStatus.NotFound => Results.NotFound(new { error = result.Error }),
+            CommandStatus.Conflict => Results.Conflict(new { error = result.Error }),
+            _ => Results.Ok(result.Value)
+        };
+    }
+
+    private static async Task<IResult> PatchUserAsync(
+        int id,
+        PatchUserCommand command,
+        IValidator<PatchUserCommand> validator,
+        PatchUserCommandHandler handler,
         CancellationToken cancellationToken)
     {
         var validation = await validator.ValidateAsync(command, cancellationToken);

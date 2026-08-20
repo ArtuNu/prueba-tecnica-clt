@@ -6,6 +6,7 @@ Web API construida con ASP.NET Core Minimal API, .NET 10, CQRS simple, EF Core c
 
 ```powershell
 dotnet restore
+dotnet tool install --global dotnet-ef
 dotnet ef database update
 dotnet run
 ```
@@ -26,10 +27,12 @@ La clave se lee desde `Security:ApiKey` en `appsettings.json` y puede reemplazar
 - `GET /users?isActive=true|false`
 - `GET /users/{id}`
 - `PUT /users/{id}`
+- `PATCH /users/{id}`
 - `DELETE /users/{id}`
 - `POST /users/{userId}/addresses`
 - `GET /users/{userId}/addresses`
 - `PUT /addresses/{id}`
+- `PATCH /addresses/{id}`
 - `DELETE /addresses/{id}`
 - `GET /currencies`
 - `POST /currencies`

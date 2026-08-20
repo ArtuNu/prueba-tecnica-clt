@@ -51,11 +51,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<CreateUserCommandHandler>();
 builder.Services.AddScoped<UpdateUserCommandHandler>();
+builder.Services.AddScoped<PatchUserCommandHandler>();
 builder.Services.AddScoped<DeleteUserCommandHandler>();
 builder.Services.AddScoped<GetUsersQueryHandler>();
 builder.Services.AddScoped<GetUserByIdQueryHandler>();
 builder.Services.AddScoped<CreateAddressCommandHandler>();
 builder.Services.AddScoped<UpdateAddressCommandHandler>();
+builder.Services.AddScoped<PatchAddressCommandHandler>();
 builder.Services.AddScoped<DeleteAddressCommandHandler>();
 builder.Services.AddScoped<GetUserAddressesQueryHandler>();
 builder.Services.AddScoped<CreateCurrencyCommandHandler>();
