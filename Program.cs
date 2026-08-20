@@ -13,6 +13,13 @@ using PruebaTecnicaClt.Domain.Entities;
 using PruebaTecnicaClt.Endpoints;
 using PruebaTecnicaClt.Infrastructure.Persistence;
 using PruebaTecnicaClt.Middleware;
+using System.Globalization;
+
+var culture = new CultureInfo("es-ES");
+
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
+ValidatorOptions.Global.LanguageManager.Culture = culture;
 
 var builder = WebApplication.CreateBuilder(args);
 

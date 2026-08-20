@@ -44,52 +44,18 @@ public static class UserEndpoints
         string? name,
         string? email,
         string? isActive,
-        HttpRequest request,
+        IValidator<GetUsersQuery> validator,
         GetUsersQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        // Se valida que los parámetros no se envien vacios
-
-        if (request.Query.ContainsKey("name") &&
-            string.IsNullOrWhiteSpace(request.Query["name"]))
+        var query = new GetUsersQuery(name, email, isActive);
+        var validation = await validator.ValidateAsync(query, cancellationToken);
+        if (!validation.IsValid)
         {
-            return Results.BadRequest(new
-            {
-                error = "El parámetro 'name' no puede estar vacío."
-            });
+            return Results.ValidationProblem(validation.ToErrorDictionary());
         }
 
-        if (request.Query.ContainsKey("email") &&
-            string.IsNullOrWhiteSpace(request.Query["email"]))
-        {
-            return Results.BadRequest(new
-            {
-                error = "El parámetro 'email' no puede estar vacío."
-            });
-        }
-
-        if (request.Query.ContainsKey("isActive") &&
-            string.IsNullOrWhiteSpace(request.Query["isActive"]))
-        {
-            return Results.BadRequest(new
-            {
-                error = "El parámetro 'isActive' no puede estar vacío."
-            });
-        }
-
-        // Se valida que el valor del parametro sea solo o true o false
-        if (!string.IsNullOrWhiteSpace(isActive) &&
-            !bool.TryParse(isActive, out _))
-        {
-            return Results.BadRequest(new
-            {
-                error = "El parámetro 'isActive' debe ser 'true' o 'false'."
-            });
-        }
-
-        var users = await handler.HandleAsync(
-            new GetUsersQuery(name, email, isActive),
-            cancellationToken);
+        var users = await handler.HandleAsync(query, cancellationToken);
         return Results.Ok(users);
     }
 
@@ -152,6 +118,6 @@ public static class UserEndpoints
         CancellationToken cancellationToken)
     {
         var deleted = await handler.HandleAsync(id, cancellationToken);
-        return deleted ? Results.NoContent() : Results.NotFound();
+        return deleted ? Results.NoContent() : Results.NotFound(new {error = $"No se encontró el usuario con ID {id}."});
     }
 }
