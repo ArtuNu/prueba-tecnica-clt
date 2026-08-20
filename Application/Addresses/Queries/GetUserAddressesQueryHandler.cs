@@ -18,6 +18,11 @@ public sealed class GetUserAddressesQueryHandler(AppDbContext dbContext)
             .AsNoTracking()
             .Where(address => address.UserId == query.UserId);
 
+        if (query.Id.HasValue)
+        {
+            addressesQuery = addressesQuery.Where(address => address.Id == query.Id.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(query.Street))
         {
             var street = query.Street.Trim().ToLower();

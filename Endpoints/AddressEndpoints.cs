@@ -9,11 +9,21 @@ public static class AddressEndpoints
 {
     public static IEndpointRouteBuilder MapAddressEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/users/{userId:int}/addresses", CreateAddressAsync).WithTags("Addresses");
-        endpoints.MapGet("/users/{userId:int}/addresses", GetUserAddressesAsync).WithTags("Addresses");
-        endpoints.MapPut("/addresses/{id:int}", UpdateAddressAsync).WithTags("Addresses");
-        endpoints.MapPatch("/addresses/{id:int}", PatchAddressAsync).WithTags("Addresses");
-        endpoints.MapDelete("/addresses/{id:int}", DeleteAddressAsync).WithTags("Addresses");
+        endpoints.MapPost("/users/{userId:int}/addresses", CreateAddressAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
+        endpoints.MapGet("/users/{userId:int}/addresses", GetUserAddressesAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters("id", "street", "city", "country", "zipCode");
+        endpoints.MapPut("/addresses/{id:int}", UpdateAddressAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
+        endpoints.MapPatch("/addresses/{id:int}", PatchAddressAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
+        endpoints.MapDelete("/addresses/{id:int}", DeleteAddressAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
 
         return endpoints;
     }
@@ -42,16 +52,23 @@ public static class AddressEndpoints
 
     private static async Task<IResult> GetUserAddressesAsync(
         int userId,
+        int? id,
         string? street,
         string? city,
         string? country,
         string? zipCode,
+        IValidator<GetUserAddressesQuery> validator,
         GetUserAddressesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var addresses = await handler.HandleAsync(
-            new GetUserAddressesQuery(userId, street, city, country, zipCode),
-            cancellationToken);
+        var query = new GetUserAddressesQuery(userId, id, street, city, country, zipCode);
+        var validation = await validator.ValidateAsync(query, cancellationToken);
+        if (!validation.IsValid)
+        {
+            return Results.ValidationProblem(validation.ToErrorDictionary());
+        }
+
+        var addresses = await handler.HandleAsync(query, cancellationToken);
         return addresses is null
             ? Results.NotFound(new { error = "Usuario no encontrado." })
             : Results.Ok(addresses);

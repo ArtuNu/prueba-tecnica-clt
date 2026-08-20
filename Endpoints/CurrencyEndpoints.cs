@@ -10,9 +10,15 @@ public static class CurrencyEndpoints
 {
     public static IEndpointRouteBuilder MapCurrencyEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/currencies", GetCurrenciesAsync).WithTags("Currencies");
-        endpoints.MapPost("/currencies", CreateCurrencyAsync).WithTags("Currencies");
-        endpoints.MapPost("/currency/convert", ConvertCurrencyAsync).WithTags("Conversion");
+        endpoints.MapGet("/currencies", GetCurrenciesAsync)
+            .WithTags("Currencies")
+            .ValidateQueryParameters("code", "name");
+        endpoints.MapPost("/currencies", CreateCurrencyAsync)
+            .WithTags("Currencies")
+            .ValidateQueryParameters();
+        endpoints.MapPost("/currency/convert", ConvertCurrencyAsync)
+            .WithTags("Conversion")
+            .ValidateQueryParameters();
 
         return endpoints;
     }
@@ -20,12 +26,18 @@ public static class CurrencyEndpoints
     private static async Task<IResult> GetCurrenciesAsync(
         string? code,
         string? name,
+        IValidator<GetCurrenciesQuery> validator,
         GetCurrenciesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var currencies = await handler.HandleAsync(
-            new GetCurrenciesQuery(code, name),
-            cancellationToken);
+        var query = new GetCurrenciesQuery(code, name);
+        var validation = await validator.ValidateAsync(query, cancellationToken);
+        if (!validation.IsValid)
+        {
+            return Results.ValidationProblem(validation.ToErrorDictionary());
+        }
+
+        var currencies = await handler.HandleAsync(query, cancellationToken);
         return Results.Ok(currencies);
     }
 

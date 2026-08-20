@@ -30,12 +30,14 @@ La clave se lee desde `Security:ApiKey` en `appsettings.json` y puede reemplazar
 - `PATCH /users/{id}`
 - `DELETE /users/{id}`
 - `POST /users/{userId}/addresses`
-- `GET /users/{userId}/addresses?street={street}&city={city}&country={country}&zipCode={zipCode}`
+- `GET /users/{userId}/addresses?id={id}&street={street}&city={city}&country={country}&zipCode={zipCode}`
 - `PUT /addresses/{id}`
 - `PATCH /addresses/{id}`
 - `DELETE /addresses/{id}`
 - `GET /currencies?code={code}&name={name}`
 - `POST /currencies`
 - `POST /currency/convert`
+
+Los endpoints rechazan con `400 Bad Request` cualquier parámetro de consulta no reconocido. Los filtros opcionales tampoco pueden enviarse vacíos.
 
 Los passwords se almacenan usando `PasswordHasher<TUser>`; nunca se devuelven en las respuestas. Email y código de moneda tienen índices únicos con comparación case-insensitive en SQLite.

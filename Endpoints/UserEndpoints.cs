@@ -12,12 +12,12 @@ public static class UserEndpoints
     {
         var group = endpoints.MapGroup("/users").WithTags("Users");
 
-        group.MapPost("/", CreateUserAsync);
-        group.MapGet("/", GetUsersAsync);
-        group.MapGet("/{id:int}", GetUserByIdAsync);
-        group.MapPut("/{id:int}", UpdateUserAsync);
-        group.MapPatch("/{id:int}", PatchUserAsync);
-        group.MapDelete("/{id:int}", DeleteUserAsync);
+        group.MapPost("/", CreateUserAsync).ValidateQueryParameters();
+        group.MapGet("/", GetUsersAsync).ValidateQueryParameters("name", "email", "isActive");
+        group.MapGet("/{id:int}", GetUserByIdAsync).ValidateQueryParameters();
+        group.MapPut("/{id:int}", UpdateUserAsync).ValidateQueryParameters();
+        group.MapPatch("/{id:int}", PatchUserAsync).ValidateQueryParameters();
+        group.MapDelete("/{id:int}", DeleteUserAsync).ValidateQueryParameters();
 
         return endpoints;
     }
