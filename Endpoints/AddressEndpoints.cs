@@ -15,6 +15,12 @@ public static class AddressEndpoints
         endpoints.MapGet("/users/{userId:int}/addresses", GetUserAddressesAsync)
             .WithTags("Addresses")
             .ValidateQueryParameters("id", "street", "city", "country", "zipCode");
+        endpoints.MapGet("/addresses", GetAddressesAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
+        endpoints.MapGet("/addresses/{id:int}", GetAddressByIdAsync)
+            .WithTags("Addresses")
+            .ValidateQueryParameters();
         endpoints.MapPut("/addresses/{id:int}", UpdateAddressAsync)
             .WithTags("Addresses")
             .ValidateQueryParameters();
@@ -91,6 +97,25 @@ public static class AddressEndpoints
         return result.Status == CommandStatus.NotFound
             ? Results.NotFound(new { error = result.Error })
             : Results.Ok(result.Value);
+    }
+
+    private static async Task<IResult> GetAddressByIdAsync(
+        int id,
+        GetAddressByIdQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var address = await handler.HandleAsync(id, cancellationToken);
+        return address is null
+            ? Results.NotFound(new { error = $"No se encontró la dirección con ID {id}." })
+            : Results.Ok(address);
+    }
+
+    private static async Task<IResult> GetAddressesAsync(
+        GetAddressesQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var addresses = await handler.HandleAsync(cancellationToken);
+        return Results.Ok(addresses);
     }
 
     private static async Task<IResult> PatchAddressAsync(

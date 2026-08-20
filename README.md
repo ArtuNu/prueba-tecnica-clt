@@ -31,6 +31,8 @@ La clave se lee desde `Security:ApiKey` en `appsettings.json` y puede reemplazar
 - `DELETE /users/{id}`
 - `POST /users/{userId}/addresses`
 - `GET /users/{userId}/addresses?id={id}&street={street}&city={city}&country={country}&zipCode={zipCode}`
+- `GET /addresses`
+- `GET /addresses/{id}`
 - `PUT /addresses/{id}`
 - `PATCH /addresses/{id}`
 - `DELETE /addresses/{id}`

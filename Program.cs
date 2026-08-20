@@ -67,6 +67,8 @@ builder.Services.AddScoped<UpdateAddressCommandHandler>();
 builder.Services.AddScoped<PatchAddressCommandHandler>();
 builder.Services.AddScoped<DeleteAddressCommandHandler>();
 builder.Services.AddScoped<GetUserAddressesQueryHandler>();
+builder.Services.AddScoped<GetAddressesQueryHandler>();
+builder.Services.AddScoped<GetAddressByIdQueryHandler>();
 builder.Services.AddScoped<CreateCurrencyCommandHandler>();
 builder.Services.AddScoped<GetCurrenciesQueryHandler>();
 builder.Services.AddScoped<ConvertCurrencyCommandHandler>();
