@@ -24,17 +24,17 @@ La clave se lee desde `Security:ApiKey` en `appsettings.json` y puede reemplazar
 ## Endpoints
 
 - `POST /users`
-- `GET /users?isActive=true|false`
+- `GET /users?name={name}&email={email}&isActive=true|false`
 - `GET /users/{id}`
 - `PUT /users/{id}`
 - `PATCH /users/{id}`
 - `DELETE /users/{id}`
 - `POST /users/{userId}/addresses`
-- `GET /users/{userId}/addresses`
+- `GET /users/{userId}/addresses?street={street}&city={city}&country={country}&zipCode={zipCode}`
 - `PUT /addresses/{id}`
 - `PATCH /addresses/{id}`
 - `DELETE /addresses/{id}`
-- `GET /currencies`
+- `GET /currencies?code={code}&name={name}`
 - `POST /currencies`
 - `POST /currency/convert`
 

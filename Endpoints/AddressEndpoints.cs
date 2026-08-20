@@ -42,12 +42,18 @@ public static class AddressEndpoints
 
     private static async Task<IResult> GetUserAddressesAsync(
         int userId,
+        string? street,
+        string? city,
+        string? country,
+        string? zipCode,
         GetUserAddressesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var addresses = await handler.HandleAsync(userId, cancellationToken);
+        var addresses = await handler.HandleAsync(
+            new GetUserAddressesQuery(userId, street, city, country, zipCode),
+            cancellationToken);
         return addresses is null
-            ? Results.NotFound(new { error = "User not found." })
+            ? Results.NotFound(new { error = "Usuario no encontrado." })
             : Results.Ok(addresses);
     }
 

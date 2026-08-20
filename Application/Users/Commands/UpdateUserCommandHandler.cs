@@ -18,7 +18,7 @@ public sealed class UpdateUserCommandHandler(
         var user = await dbContext.Users.FindAsync([id], cancellationToken);
         if (user is null)
         {
-            return CommandResult<UserDto>.NotFound("User not found.");
+            return CommandResult<UserDto>.NotFound("Usuario no encontrado.");
         }
 
         var normalizedEmail = command.Email.Trim().ToLowerInvariant();

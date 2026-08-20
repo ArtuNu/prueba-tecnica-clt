@@ -18,10 +18,14 @@ public static class CurrencyEndpoints
     }
 
     private static async Task<IResult> GetCurrenciesAsync(
+        string? code,
+        string? name,
         GetCurrenciesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var currencies = await handler.HandleAsync(cancellationToken);
+        var currencies = await handler.HandleAsync(
+            new GetCurrenciesQuery(code, name),
+            cancellationToken);
         return Results.Ok(currencies);
     }
 

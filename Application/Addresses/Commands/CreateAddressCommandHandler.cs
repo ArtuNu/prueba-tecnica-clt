@@ -14,12 +14,7 @@ public sealed class CreateAddressCommandHandler(AppDbContext dbContext)
     {
         if (!await dbContext.Users.AnyAsync(user => user.Id == userId, cancellationToken))
         {
-            return CommandResult<AddressDto>.NotFound("User not found.");
-        }
-
-        if (await dbContext.Addresses.AnyAsync(address => address.UserId == userId, cancellationToken))
-        {
-            return CommandResult<AddressDto>.Conflict("The user already has an address.");
+            return CommandResult<AddressDto>.NotFound("Usuario no encontrado.");
         }
 
         var address = new Address
@@ -32,15 +27,7 @@ public sealed class CreateAddressCommandHandler(AppDbContext dbContext)
         };
 
         dbContext.Addresses.Add(address);
-
-        try
-        {
-            await dbContext.SaveChangesAsync(cancellationToken);
-        }
-        catch (DbUpdateException)
-        {
-            return CommandResult<AddressDto>.Conflict("The user already has an address.");
-        }
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return CommandResult<AddressDto>.Success(AddressDto.FromEntity(address));
     }

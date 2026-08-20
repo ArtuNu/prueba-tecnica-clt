@@ -39,9 +39,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
                 .HasMaxLength(500)
                 .IsRequired();
 
-            entity.HasOne(user => user.Address)
+            entity.HasMany(user => user.Addresses)
                 .WithOne(address => address.User)
-                .HasForeignKey<Address>(address => address.UserId)
+                .HasForeignKey(address => address.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

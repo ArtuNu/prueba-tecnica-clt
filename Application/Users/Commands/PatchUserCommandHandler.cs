@@ -18,7 +18,7 @@ public sealed class PatchUserCommandHandler(
         var user = await dbContext.Users.FindAsync([id], cancellationToken);
         if (user is null)
         {
-            return CommandResult<UserDto>.NotFound("User not found.");
+            return CommandResult<UserDto>.NotFound("Usuario no encontrado.");
         }
 
         if (command.Email is not null)

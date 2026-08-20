@@ -12,5 +12,5 @@ public sealed class User
 
     public required string PasswordHash { get; set; }
 
-    public Address? Address { get; set; }
+    public ICollection<Address> Addresses { get; set; } = [];
 }
