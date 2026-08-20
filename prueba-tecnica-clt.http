@@ -1,0 +1,54 @@
+@prueba_tecnica_clt_HostAddress = http://localhost:5102
+@apiKey = clt-development-api-key
+
+POST {{prueba_tecnica_clt_HostAddress}}/users
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "password": "Secret123"
+}
+
+###
+
+GET {{prueba_tecnica_clt_HostAddress}}/users?isActive=true
+X-API-KEY: {{apiKey}}
+Accept: application/json
+
+###
+
+POST {{prueba_tecnica_clt_HostAddress}}/currencies
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "code": "PYG",
+  "name": "Guarani",
+  "rateToBase": 1
+}
+
+###
+
+POST {{prueba_tecnica_clt_HostAddress}}/currencies
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "code": "USD",
+  "name": "US Dollar",
+  "rateToBase": 7300
+}
+
+###
+
+POST {{prueba_tecnica_clt_HostAddress}}/currency/convert
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "fromCode": "USD",
+  "toCode": "PYG",
+  "amount": 100
+}

@@ -1,0 +1,22 @@
+using FluentValidation;
+
+namespace PruebaTecnicaClt.Application.Conversion;
+
+public sealed class ConvertCurrencyCommandValidator : AbstractValidator<ConvertCurrencyCommand>
+{
+    public ConvertCurrencyCommandValidator()
+    {
+        RuleFor(command => command.FromCode)
+            .NotEmpty()
+            .Matches("^[A-Za-z]{3}$")
+            .WithMessage("FromCode must contain exactly three letters.");
+
+        RuleFor(command => command.ToCode)
+            .NotEmpty()
+            .Matches("^[A-Za-z]{3}$")
+            .WithMessage("ToCode must contain exactly three letters.");
+
+        RuleFor(command => command.Amount)
+            .GreaterThan(0);
+    }
+}
