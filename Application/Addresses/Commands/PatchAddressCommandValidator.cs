@@ -11,7 +11,7 @@ public sealed class PatchAddressCommandValidator : AbstractValidator<PatchAddres
                 || command.City is not null
                 || command.Country is not null
                 || command.ZipCode is not null)
-            .WithMessage("At least one field must be provided.");
+            .WithMessage("Se debe proporcionar al menos un campo.");
 
         RuleFor(command => command.Street)
             .NotEmpty()

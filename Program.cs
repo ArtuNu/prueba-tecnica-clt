@@ -71,6 +71,7 @@ builder.Services.AddScoped<GetAddressesQueryHandler>();
 builder.Services.AddScoped<GetAddressByIdQueryHandler>();
 builder.Services.AddScoped<CreateCurrencyCommandHandler>();
 builder.Services.AddScoped<GetCurrenciesQueryHandler>();
+builder.Services.AddScoped<GetCurrencyByIdQueryHandler>();
 builder.Services.AddScoped<ConvertCurrencyCommandHandler>();
 
 var app = builder.Build();

@@ -13,6 +13,9 @@ public static class CurrencyEndpoints
         endpoints.MapGet("/currencies", GetCurrenciesAsync)
             .WithTags("Currencies")
             .ValidateQueryParameters("code", "name");
+        endpoints.MapGet("/currencies/{id:int}", GetCurrencyByIdAsync)
+            .WithTags("Currencies")
+            .ValidateQueryParameters();
         endpoints.MapPost("/currencies", CreateCurrencyAsync)
             .WithTags("Currencies")
             .ValidateQueryParameters();
@@ -39,6 +42,17 @@ public static class CurrencyEndpoints
 
         var currencies = await handler.HandleAsync(query, cancellationToken);
         return Results.Ok(currencies);
+    }
+
+    private static async Task<IResult> GetCurrencyByIdAsync(
+        int id,
+        GetCurrencyByIdQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var currency = await handler.HandleAsync(id, cancellationToken);
+        return currency is null
+            ? Results.NotFound(new { error = $"No se encontró la moneda con ID {id}." })
+            : Results.Ok(currency);
     }
 
     private static async Task<IResult> CreateCurrencyAsync(

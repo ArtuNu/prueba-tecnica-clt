@@ -11,7 +11,7 @@ public sealed class PatchUserCommandValidator : AbstractValidator<PatchUserComma
                 || command.Email is not null
                 || command.IsActive.HasValue
                 || command.Password is not null)
-            .WithMessage("At least one field must be provided.");
+            .WithMessage("Se debe proporcionar al menos un campo.");
 
         RuleFor(command => command.Name)
             .NotEmpty()

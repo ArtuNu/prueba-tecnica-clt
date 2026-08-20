@@ -17,7 +17,7 @@ public sealed class CreateCurrencyCommandHandler(AppDbContext dbContext)
                 currency => currency.Code == normalizedCode,
                 cancellationToken))
         {
-            return CommandResult<CurrencyDto>.Conflict("A currency with this code already exists.");
+            return CommandResult<CurrencyDto>.Conflict("El código ingresado ya se encuentra asociado a una modena.");
         }
 
         var currency = new Currency
@@ -35,7 +35,7 @@ public sealed class CreateCurrencyCommandHandler(AppDbContext dbContext)
         }
         catch (DbUpdateException)
         {
-            return CommandResult<CurrencyDto>.Conflict("A currency with this code already exists.");
+            return CommandResult<CurrencyDto>.Conflict("El código ingresado ya se encuentra asociado a una modena.");
         }
 
         return CommandResult<CurrencyDto>.Success(CurrencyDto.FromEntity(currency));

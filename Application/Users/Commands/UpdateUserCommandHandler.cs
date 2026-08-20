@@ -28,7 +28,7 @@ public sealed class UpdateUserCommandHandler(
 
         if (emailIsInUse)
         {
-            return CommandResult<UserDto>.Conflict("A user with this email already exists.");
+            return CommandResult<UserDto>.Conflict("Ya existe un usuario con este email.");
         }
 
         user.Name = command.Name.Trim();
@@ -46,7 +46,7 @@ public sealed class UpdateUserCommandHandler(
         }
         catch (DbUpdateException)
         {
-            return CommandResult<UserDto>.Conflict("A user with this email already exists.");
+            return CommandResult<UserDto>.Conflict("Ya existe un usuario con este email.");
         }
 
         return CommandResult<UserDto>.Success(UserDto.FromEntity(user));

@@ -9,7 +9,7 @@ public sealed class CreateCurrencyCommandValidator : AbstractValidator<CreateCur
         RuleFor(command => command.Code)
             .NotEmpty()
             .Matches("^[A-Za-z]{3}$")
-            .WithMessage("Code must contain exactly three letters.");
+            .WithMessage("El código debe contener exactamente tres letras.");
 
         RuleFor(command => command.Name)
             .NotEmpty()

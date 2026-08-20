@@ -20,12 +20,12 @@ public sealed class ConvertCurrencyCommandHandler(AppDbContext dbContext)
 
         if (!currencies.TryGetValue(fromCode, out var fromCurrency))
         {
-            return CommandResult<ConversionDto>.NotFound($"Currency '{fromCode}' was not found.");
+            return CommandResult<ConversionDto>.NotFound($"Divisa '{fromCode}' no encontrada.");
         }
 
         if (!currencies.TryGetValue(toCode, out var toCurrency))
         {
-            return CommandResult<ConversionDto>.NotFound($"Currency '{toCode}' was not found.");
+            return CommandResult<ConversionDto>.NotFound($"Divisa '{toCode}' no encontrada.");
         }
 
         var baseAmount = command.Amount * fromCurrency.RateToBase;

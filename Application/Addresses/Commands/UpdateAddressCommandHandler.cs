@@ -13,7 +13,7 @@ public sealed class UpdateAddressCommandHandler(AppDbContext dbContext)
         var address = await dbContext.Addresses.FindAsync([id], cancellationToken);
         if (address is null)
         {
-            return CommandResult<AddressDto>.NotFound("Address not found.");
+            return CommandResult<AddressDto>.NotFound("Dirección no encocntrada.");
         }
 
         address.Street = command.Street.Trim();

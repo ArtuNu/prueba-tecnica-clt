@@ -37,6 +37,7 @@ La clave se lee desde `Security:ApiKey` en `appsettings.json` y puede reemplazar
 - `PATCH /addresses/{id}`
 - `DELETE /addresses/{id}`
 - `GET /currencies?code={code}&name={name}`
+- `GET /currencies/{id}`
 - `POST /currencies`
 - `POST /currency/convert`
 

@@ -20,7 +20,7 @@ public sealed class CreateUserCommandHandler(
                 user => user.Email == normalizedEmail,
                 cancellationToken))
         {
-            return CommandResult<UserDto>.Conflict("A user with this email already exists.");
+            return CommandResult<UserDto>.Conflict("Ya existe un usuario con este email.");
         }
 
         var user = new User
@@ -40,7 +40,7 @@ public sealed class CreateUserCommandHandler(
         }
         catch (DbUpdateException)
         {
-            return CommandResult<UserDto>.Conflict("A user with this email already exists.");
+            return CommandResult<UserDto>.Conflict("Ya existe un usuario con este email.");
         }
 
         return CommandResult<UserDto>.Success(UserDto.FromEntity(user));
