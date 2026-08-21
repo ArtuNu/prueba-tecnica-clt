@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PruebaTecnicaClt.Application.Common;
 using PruebaTecnicaClt.Infrastructure.Persistence;
 
-namespace PruebaTecnicaClt.Application.Conversion;
+namespace PruebaTecnicaClt.Application.CurrencyConversion;
 
 public sealed class ConvertCurrencyCommandHandler(AppDbContext dbContext)
 {

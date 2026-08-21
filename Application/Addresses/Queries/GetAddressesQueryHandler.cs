@@ -5,7 +5,9 @@ namespace PruebaTecnicaClt.Application.Addresses.Queries;
 
 public sealed class GetAddressesQueryHandler(AppDbContext dbContext)
 {
-    public async Task<IReadOnlyList<AddressDto>> HandleAsync(CancellationToken cancellationToken) =>
+    public async Task<IReadOnlyList<AddressDto>> HandleAsync(
+        GetAddressesQuery query,
+        CancellationToken cancellationToken) =>
         await dbContext.Addresses
             .AsNoTracking()
             .OrderBy(address => address.Id)

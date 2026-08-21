@@ -1,4 +1,4 @@
-namespace PruebaTecnicaClt.Application.Conversion;
+namespace PruebaTecnicaClt.Application.CurrencyConversion;
 
 public sealed record ConversionDto(
     string FromCode,

@@ -1,6 +1,6 @@
 using FluentValidation;
 using PruebaTecnicaClt.Application.Common;
-using PruebaTecnicaClt.Application.Conversion;
+using PruebaTecnicaClt.Application.CurrencyConversion;
 using PruebaTecnicaClt.Application.Currencies.Commands;
 using PruebaTecnicaClt.Application.Currencies.Queries;
 
@@ -49,7 +49,8 @@ public static class CurrencyEndpoints
         GetCurrencyByIdQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var currency = await handler.HandleAsync(id, cancellationToken);
+        var query = new GetCurrencyByIdQuery(id);
+        var currency = await handler.HandleAsync(query, cancellationToken);
         return currency is null
             ? Results.NotFound(new { error = $"No se encontró la moneda con ID {id}." })
             : Results.Ok(currency);

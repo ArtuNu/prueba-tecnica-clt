@@ -64,7 +64,8 @@ public static class UserEndpoints
         GetUserByIdQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var user = await handler.HandleAsync(id, cancellationToken);
+        var query = new GetUserByIdQuery(id);
+        var user = await handler.HandleAsync(query, cancellationToken);
         return user is null ? Results.NotFound() : Results.Ok(user);
     }
 

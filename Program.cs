@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using PruebaTecnicaClt.Application.Addresses.Commands;
 using PruebaTecnicaClt.Application.Addresses.Queries;
-using PruebaTecnicaClt.Application.Conversion;
+using PruebaTecnicaClt.Application.CurrencyConversion;
 using PruebaTecnicaClt.Application.Currencies.Commands;
 using PruebaTecnicaClt.Application.Currencies.Queries;
 using PruebaTecnicaClt.Application.Users.Commands;

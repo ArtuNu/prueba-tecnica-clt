@@ -5,10 +5,12 @@ namespace PruebaTecnicaClt.Application.Currencies.Queries;
 
 public sealed class GetCurrencyByIdQueryHandler(AppDbContext dbContext)
 {
-    public Task<CurrencyDto?> HandleAsync(int id, CancellationToken cancellationToken) =>
+    public Task<CurrencyDto?> HandleAsync(
+        GetCurrencyByIdQuery query,
+        CancellationToken cancellationToken) =>
         dbContext.Currencies
             .AsNoTracking()
-            .Where(currency => currency.Id == id)
+            .Where(currency => currency.Id == query.Id)
             .Select(currency => new CurrencyDto(
                 currency.Id,
                 currency.Code,

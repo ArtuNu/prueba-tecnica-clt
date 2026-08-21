@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace PruebaTecnicaClt.Application.Conversion;
+namespace PruebaTecnicaClt.Application.CurrencyConversion;
 
 public sealed class ConvertCurrencyCommandValidator : AbstractValidator<ConvertCurrencyCommand>
 {

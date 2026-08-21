@@ -104,7 +104,8 @@ public static class AddressEndpoints
         GetAddressByIdQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var address = await handler.HandleAsync(id, cancellationToken);
+        var query = new GetAddressByIdQuery(id);
+        var address = await handler.HandleAsync(query, cancellationToken);
         return address is null
             ? Results.NotFound(new { error = $"No se encontró la dirección con ID {id}." })
             : Results.Ok(address);
@@ -114,7 +115,8 @@ public static class AddressEndpoints
         GetAddressesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var addresses = await handler.HandleAsync(cancellationToken);
+        var query = new GetAddressesQuery();
+        var addresses = await handler.HandleAsync(query, cancellationToken);
         return Results.Ok(addresses);
     }
 
