@@ -2,7 +2,7 @@ namespace PruebaTecnicaClt.Application.Addresses.Queries;
 
 public sealed record GetUserAddressesQuery(
     int UserId,
-    int? Id,
+    int? AddressId,
     string? Street,
     string? City,
     string? Country,

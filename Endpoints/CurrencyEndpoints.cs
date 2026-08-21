@@ -12,15 +12,36 @@ public static class CurrencyEndpoints
     {
         endpoints.MapGet("/currencies", GetCurrenciesAsync)
             .WithTags("Currencies")
+            .WithName("GetCurrencies")
+            .WithSummary("Listar monedas")
+            .WithDescription("Permite filtrar por coincidencia parcial de código o nombre.")
+            .Produces<IReadOnlyList<PruebaTecnicaClt.Application.Currencies.CurrencyDto>>()
+            .ProducesValidationProblem()
             .ValidateQueryParameters("code", "name");
         endpoints.MapGet("/currencies/{id:int}", GetCurrencyByIdAsync)
             .WithTags("Currencies")
+            .WithName("GetCurrencyById")
+            .WithSummary("Obtener una moneda")
+            .Produces<PruebaTecnicaClt.Application.Currencies.CurrencyDto>()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
         endpoints.MapPost("/currencies", CreateCurrencyAsync)
             .WithTags("Currencies")
+            .WithName("CreateCurrency")
+            .WithSummary("Crear una moneda")
+            .WithDescription("El código debe tener tres letras y ser único. RateToBase debe ser mayor que cero.")
+            .Produces<PruebaTecnicaClt.Application.Currencies.CurrencyDto>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status409Conflict)
             .ValidateQueryParameters();
         endpoints.MapPost("/currency/convert", ConvertCurrencyAsync)
             .WithTags("Conversion")
+            .WithName("ConvertCurrency")
+            .WithSummary("Convertir un importe")
+            .WithDescription("Calcula amount × from.rateToBase ÷ to.rateToBase. Ambas monedas deben existir.")
+            .Produces<ConversionDto>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
 
         return endpoints;

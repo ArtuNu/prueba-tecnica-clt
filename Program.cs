@@ -33,6 +33,9 @@ builder.Services.AddOpenApi(options =>
     {
         document.Info.Title = "Prueba Tecnica CLT API";
         document.Info.Version = "v1";
+        document.Info.Description =
+            "API REST para administrar usuarios, direcciones y monedas, y realizar conversiones monetarias. " +
+            "Todos los endpoints de negocio requieren el header X-API-KEY.";
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes ??=
             new Dictionary<string, IOpenApiSecurityScheme>();
@@ -41,7 +44,7 @@ builder.Services.AddOpenApi(options =>
             Type = SecuritySchemeType.ApiKey,
             Name = "X-API-KEY",
             In = ParameterLocation.Header,
-            Description = "API key required by every business endpoint."
+            Description = "Clave requerida por todos los endpoints de negocio."
         };
         document.Security ??= [];
         document.Security.Add(new OpenApiSecurityRequirement
@@ -83,7 +86,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
-        options.SwaggerEndpoint("/openapi/v1.json", "Prueba Tecnica CLT API v1"));
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Prueba Técnica CLT API v1");
+        options.DocumentTitle = "Prueba Técnica CLT API";
+        options.DisplayRequestDuration();
+        options.EnableTryItOutByDefault();
+    });
 }
 
 app.MapUserEndpoints();

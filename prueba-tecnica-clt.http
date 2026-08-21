@@ -1,7 +1,13 @@
-@prueba_tecnica_clt_HostAddress = http://localhost:5102
+# Ejecute primero la API con: dotnet run
+# Cambie estos IDs si la base ya contiene otros registros.
+@host = http://localhost:5102
 @apiKey = clt-development-api-key
+@userId = 1
+@addressId = 1
+@pygCurrencyId = 1
 
-POST {{prueba_tecnica_clt_HostAddress}}/users
+### Crear usuario
+POST {{host}}/users
 X-API-KEY: {{apiKey}}
 Content-Type: application/json
 
@@ -11,63 +17,124 @@ Content-Type: application/json
   "password": "Secret123"
 }
 
-###
-
-GET {{prueba_tecnica_clt_HostAddress}}/users?isActive=true
+### Listar usuarios
+GET {{host}}/users
 X-API-KEY: {{apiKey}}
 Accept: application/json
 
-###
-
-GET {{prueba_tecnica_clt_HostAddress}}/users?name=Ada&email=example.com&isActive=true
+### Filtrar usuarios (los filtros de texto son parciales)
+GET {{host}}/users?name=Ada&email=example.com&isActive=true
 X-API-KEY: {{apiKey}}
 Accept: application/json
 
-###
-
-GET {{prueba_tecnica_clt_HostAddress}}/addresses
+### Obtener usuario por ID
+GET {{host}}/users/{{userId}}
 X-API-KEY: {{apiKey}}
 Accept: application/json
 
-###
+### Reemplazar usuario (password omitido = conservar el actual)
+PUT {{host}}/users/{{userId}}
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
 
-GET {{prueba_tecnica_clt_HostAddress}}/addresses/1
+{
+  "name": "Ada Byron Lovelace",
+  "email": "ada@example.com",
+  "isActive": true,
+  "password": null
+}
+
+### Actualizar parcialmente el usuario
+PATCH {{host}}/users/{{userId}}
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+
+### Crear dirección para el usuario
+POST {{host}}/users/{{userId}}/addresses
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "street": "25 de Mayo 123",
+  "city": "Asunción",
+  "country": "Paraguay",
+  "zipCode": "001101"
+}
+
+### Listar y filtrar direcciones de un usuario
+GET {{host}}/users/{{userId}}/addresses?addressId={{addressId}}&city=Asunción&country=Paraguay
 X-API-KEY: {{apiKey}}
 Accept: application/json
 
-###
-
-GET {{prueba_tecnica_clt_HostAddress}}/currencies/1
+### Listar todas las direcciones
+GET {{host}}/addresses
 X-API-KEY: {{apiKey}}
 Accept: application/json
 
-###
+### Obtener dirección por ID
+GET {{host}}/addresses/{{addressId}}
+X-API-KEY: {{apiKey}}
+Accept: application/json
 
-POST {{prueba_tecnica_clt_HostAddress}}/currencies
+### Reemplazar dirección
+PUT {{host}}/addresses/{{addressId}}
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "street": "Mariscal López 456",
+  "city": "Asunción",
+  "country": "Paraguay",
+  "zipCode": "001102"
+}
+
+### Actualizar parcialmente la dirección
+PATCH {{host}}/addresses/{{addressId}}
+X-API-KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "city": "San Lorenzo"
+}
+
+### Crear moneda base (PYG)
+POST {{host}}/currencies
 X-API-KEY: {{apiKey}}
 Content-Type: application/json
 
 {
   "code": "PYG",
-  "name": "Guarani",
+  "name": "Guaraní paraguayo",
   "rateToBase": 1
 }
 
-###
-
-POST {{prueba_tecnica_clt_HostAddress}}/currencies
+### Crear moneda de origen (USD)
+POST {{host}}/currencies
 X-API-KEY: {{apiKey}}
 Content-Type: application/json
 
 {
   "code": "USD",
-  "name": "US Dollar",
+  "name": "Dólar estadounidense",
   "rateToBase": 7300
 }
 
-###
+### Listar y filtrar monedas
+GET {{host}}/currencies?code=PYG&name=Guaraní
+X-API-KEY: {{apiKey}}
+Accept: application/json
 
-POST {{prueba_tecnica_clt_HostAddress}}/currency/convert
+### Obtener moneda por ID
+GET {{host}}/currencies/{{pygCurrencyId}}
+X-API-KEY: {{apiKey}}
+Accept: application/json
+
+### Convertir USD 100 a PYG
+POST {{host}}/currency/convert
 X-API-KEY: {{apiKey}}
 Content-Type: application/json
 
@@ -76,3 +143,20 @@ Content-Type: application/json
   "toCode": "PYG",
   "amount": 100
 }
+
+### Eliminar dirección (ejecutar al terminar las pruebas anteriores)
+DELETE {{host}}/addresses/{{addressId}}
+X-API-KEY: {{apiKey}}
+
+### Eliminar usuario y sus direcciones (ejecutar al final)
+DELETE {{host}}/users/{{userId}}
+X-API-KEY: {{apiKey}}
+
+### Ejemplo de error 401: solicitud sin API key
+GET {{host}}/users
+Accept: application/json
+
+### Ejemplo de error 400: parámetro de consulta desconocido
+GET {{host}}/users?page=1
+X-API-KEY: {{apiKey}}
+Accept: application/json

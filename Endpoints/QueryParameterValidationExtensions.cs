@@ -6,7 +6,10 @@ public static class QueryParameterValidationExtensions
         this RouteHandlerBuilder builder,
         params string[] allowedParameters)
     {
-        return builder.AddEndpointFilter(new QueryParameterValidationFilter(allowedParameters));
+        return builder
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status401Unauthorized)
+            .AddEndpointFilter(new QueryParameterValidationFilter(allowedParameters));
     }
 
     private sealed class QueryParameterValidationFilter(string[] allowedParameters) : IEndpointFilter

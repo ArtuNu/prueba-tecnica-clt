@@ -11,24 +11,59 @@ public static class AddressEndpoints
     {
         endpoints.MapPost("/users/{userId:int}/addresses", CreateAddressAsync)
             .WithTags("Addresses")
+            .WithName("CreateUserAddress")
+            .WithSummary("Crear una dirección para un usuario")
+            .WithDescription("Crea una nueva dirección vinculada al usuario indicado.")
+            .Produces<PruebaTecnicaClt.Application.Addresses.AddressDto>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
         endpoints.MapGet("/users/{userId:int}/addresses", GetUserAddressesAsync)
             .WithTags("Addresses")
-            .ValidateQueryParameters("id", "street", "city", "country", "zipCode");
+            .WithName("GetUserAddresses")
+            .WithSummary("Listar las direcciones de un usuario")
+            .WithDescription("Permite filtrar por addressId o por coincidencias parciales en los campos de texto.")
+            .Produces<IReadOnlyList<PruebaTecnicaClt.Application.Addresses.AddressDto>>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
+            .ValidateQueryParameters("addressId", "street", "city", "country", "zipCode");
         endpoints.MapGet("/addresses", GetAddressesAsync)
             .WithTags("Addresses")
+            .WithName("GetAddresses")
+            .WithSummary("Listar todas las direcciones")
+            .Produces<IReadOnlyList<PruebaTecnicaClt.Application.Addresses.AddressDto>>()
             .ValidateQueryParameters();
         endpoints.MapGet("/addresses/{id:int}", GetAddressByIdAsync)
             .WithTags("Addresses")
+            .WithName("GetAddressById")
+            .WithSummary("Obtener una dirección")
+            .Produces<PruebaTecnicaClt.Application.Addresses.AddressDto>()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
         endpoints.MapPut("/addresses/{id:int}", UpdateAddressAsync)
             .WithTags("Addresses")
+            .WithName("UpdateAddress")
+            .WithSummary("Reemplazar una dirección")
+            .WithDescription("Requiere street, city y country; zipCode es opcional.")
+            .Produces<PruebaTecnicaClt.Application.Addresses.AddressDto>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
         endpoints.MapPatch("/addresses/{id:int}", PatchAddressAsync)
             .WithTags("Addresses")
+            .WithName("PatchAddress")
+            .WithSummary("Actualizar parcialmente una dirección")
+            .WithDescription("Se debe enviar al menos uno de los campos de la dirección.")
+            .Produces<PruebaTecnicaClt.Application.Addresses.AddressDto>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
         endpoints.MapDelete("/addresses/{id:int}", DeleteAddressAsync)
             .WithTags("Addresses")
+            .WithName("DeleteAddress")
+            .WithSummary("Eliminar una dirección")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
             .ValidateQueryParameters();
 
         return endpoints;
@@ -58,7 +93,7 @@ public static class AddressEndpoints
 
     private static async Task<IResult> GetUserAddressesAsync(
         int userId,
-        int? id,
+        int? addressId,
         string? street,
         string? city,
         string? country,
@@ -67,7 +102,7 @@ public static class AddressEndpoints
         GetUserAddressesQueryHandler handler,
         CancellationToken cancellationToken)
     {
-        var query = new GetUserAddressesQuery(userId, id, street, city, country, zipCode);
+        var query = new GetUserAddressesQuery(userId, addressId, street, city, country, zipCode);
         var validation = await validator.ValidateAsync(query, cancellationToken);
         if (!validation.IsValid)
         {

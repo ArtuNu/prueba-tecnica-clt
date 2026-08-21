@@ -12,12 +12,52 @@ public static class UserEndpoints
     {
         var group = endpoints.MapGroup("/users").WithTags("Users");
 
-        group.MapPost("/", CreateUserAsync).ValidateQueryParameters();
-        group.MapGet("/", GetUsersAsync).ValidateQueryParameters("name", "email", "isActive");
-        group.MapGet("/{id:int}", GetUserByIdAsync).ValidateQueryParameters();
-        group.MapPut("/{id:int}", UpdateUserAsync).ValidateQueryParameters();
-        group.MapPatch("/{id:int}", PatchUserAsync).ValidateQueryParameters();
-        group.MapDelete("/{id:int}", DeleteUserAsync).ValidateQueryParameters();
+        group.MapPost("/", CreateUserAsync)
+            .WithName("CreateUser")
+            .WithSummary("Crear un usuario")
+            .WithDescription("Crea un usuario activo. El email debe ser único y el password se almacena como hash.")
+            .Produces<UserDto>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status409Conflict)
+            .ValidateQueryParameters();
+        group.MapGet("/", GetUsersAsync)
+            .WithName("GetUsers")
+            .WithSummary("Listar usuarios")
+            .WithDescription("Permite filtrar por coincidencia parcial de nombre o email y por estado activo.")
+            .Produces<IReadOnlyList<UserDto>>()
+            .ProducesValidationProblem()
+            .ValidateQueryParameters("name", "email", "isActive");
+        group.MapGet("/{id:int}", GetUserByIdAsync)
+            .WithName("GetUserById")
+            .WithSummary("Obtener un usuario")
+            .Produces<UserDto>()
+            .Produces(StatusCodes.Status404NotFound)
+            .ValidateQueryParameters();
+        group.MapPut("/{id:int}", UpdateUserAsync)
+            .WithName("UpdateUser")
+            .WithSummary("Reemplazar un usuario")
+            .WithDescription("Requiere name, email e isActive. Si se omite password, se conserva el actual.")
+            .Produces<UserDto>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict)
+            .ValidateQueryParameters();
+        group.MapPatch("/{id:int}", PatchUserAsync)
+            .WithName("PatchUser")
+            .WithSummary("Actualizar parcialmente un usuario")
+            .WithDescription("Acepta name, email, isActive o password; se debe enviar al menos un campo.")
+            .Produces<UserDto>()
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict)
+            .ValidateQueryParameters();
+        group.MapDelete("/{id:int}", DeleteUserAsync)
+            .WithName("DeleteUser")
+            .WithSummary("Eliminar un usuario")
+            .WithDescription("Elimina también todas las direcciones asociadas al usuario.")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .ValidateQueryParameters();
 
         return endpoints;
     }
